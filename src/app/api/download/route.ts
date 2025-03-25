@@ -4,7 +4,29 @@ import path from 'path';
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const folderPath = searchParams.get("path") || process.cwd();
+        const requestedPath = searchParams.get("path");
+        
+        // Get BASE_PATH from environment variable
+        const basePath = process.env.BASE_PATH;
+        
+        if (!basePath) {
+            throw new Error("BASE_PATH environment variable is not set");
+        }
+
+        // Use requested path or default to BASE_PATH
+        const folderPath = requestedPath ? path.resolve(requestedPath) : basePath;
+        
+        // Check if the requested path is within BASE_PATH
+        if (!folderPath.startsWith(path.resolve(basePath))) {
+            return new Response(JSON.stringify({ 
+                error: "Access denied: Cannot access directories outside of allowed path" 
+            }), {
+                status: 403,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
         
         // Read directory contents
         const items = fs.readdirSync(folderPath, { withFileTypes: true });
@@ -30,6 +52,7 @@ export async function GET(request: Request) {
                 "Content-Type": "application/json",
             },
         });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         return new Response(JSON.stringify({ 
             error: error.message 

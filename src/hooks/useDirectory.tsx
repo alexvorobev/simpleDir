@@ -14,7 +14,9 @@ export const useDirectory = () => {
 
   const fetchDirectory = async (path: string) => {
     try {
-      const response = await fetch(`/api?path=${encodeURIComponent(path)}`);
+      const response = await fetch(
+        `/api/navigate?path=${encodeURIComponent(path)}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch directory");
       }
