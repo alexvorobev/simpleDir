@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-const basePath = process.env.BASE_PATH ?? ".";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ".";
 
 export const useDirectory = () => {
-  const [directory, setDirectory] = useState<string | null>(".");
+  const [directory, setDirectory] = useState<string | null>(basePath);
   const [content, setContent] = useState<
     {
       name: string;

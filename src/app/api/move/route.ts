@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     const currentAppPath = process.cwd();
     // Get BASE_PATH from environment variable
-    const basePath = process.env.BASE_PATH ?? currentAppPath;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? currentAppPath;
 
     if (!basePath) {
       throw new Error("BASE_PATH environment variable is not set");
