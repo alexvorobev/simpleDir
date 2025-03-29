@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
+const basePath = process.env.BASE_PATH ?? ".";
+
 export const useDirectory = () => {
-  const [directory, setDirectory] = useState<string | null>(null);
+  const [directory, setDirectory] = useState<string | null>(".");
   const [content, setContent] = useState<
     {
       name: string;
@@ -42,7 +44,7 @@ export const useDirectory = () => {
   }, [directory]);
 
   const clearDirectory = () => {
-    setDirectory(null);
+    setDirectory(basePath);
     setParent(null);
     setError(null);
   };

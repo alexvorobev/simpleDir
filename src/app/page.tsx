@@ -1,14 +1,55 @@
 "use client";
 
+import { FolderSelector } from "@/components/folderSelector";
 import Header from "@/components/header";
 import { ItemMenu } from "@/components/itemMenu";
 import { Button } from "@/components/ui/button";
-import { useDirectory } from "@/hooks";
+import { useDirectory, useDownload, useMove } from "@/hooks";
 import Image from "next/image";
+import { useCallback, useState, useEffect } from "react";
 
 export default function Home() {
-  const { directory, content, parent, setDirectory, clearDirectory } =
-    useDirectory();
+  const {
+    directory,
+    content,
+    parent,
+    setDirectory,
+    clearDirectory,
+    fetchDirectory,
+  } = useDirectory();
+  const { moveItem, error, clearError } = useMove();
+  const [objectPath, setObjectPath] = useState<string | null>(null);
+  const { downloadFile } = useDownload();
+
+  // folder selector
+  const handleFolderSelect = useCallback(
+    (path: string) => {
+      if (objectPath) {
+        // Move the file/folder to the selected destination
+        moveItem(objectPath, path, () => {
+          // Refresh directory after successful move
+          fetchDirectory(directory || "");
+        });
+      }
+      setObjectPath(null);
+    },
+    [objectPath, moveItem, fetchDirectory, directory]
+  );
+
+  const handleFolderCancel = useCallback(() => {
+    setObjectPath(null);
+  }, []);
+
+  // Add error/success message display if needed
+  useEffect(() => {
+    if (error) {
+      // Display error message (you might want to add a toast/notification component)
+      console.error(error);
+      // Optional: Clear error after some time
+      const timer = setTimeout(clearError, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   return (
     <div className="flex flex-col h-screen max-w-screen-lg mx-auto">
@@ -62,12 +103,22 @@ export default function Home() {
                   <span className="ml-2">{item.name}</span>
                 )}
               </div>
-              <ItemMenu isDirectory={item.isDirectory} src={item.path} />
-              {/* <Button onClick={() => setDirectory(item.path)}>Open</Button> */}
+              <ItemMenu
+                isDirectory={item.isDirectory}
+                src={item.path}
+                onMove={setObjectPath}
+                onDownload={downloadFile}
+              />
             </div>
           ))}
         </div>
       </div>
+      <FolderSelector
+        open={!!objectPath}
+        objectPath={objectPath ?? ""}
+        onSelect={handleFolderSelect}
+        onCancel={handleFolderCancel}
+      />
     </div>
   );
 }

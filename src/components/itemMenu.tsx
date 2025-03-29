@@ -12,9 +12,14 @@ import {
 
 export function ItemMenu({
   isDirectory,
+  src,
+  onMove,
+  onDownload,
 }: {
   isDirectory: boolean;
   src: string;
+  onMove?: (src: string) => void;
+  onDownload?: (src: string) => void;
 }) {
   return (
     <DropdownMenu>
@@ -27,8 +32,16 @@ export function ItemMenu({
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Move</DropdownMenuItem>
-          {!isDirectory && <DropdownMenuItem>Download</DropdownMenuItem>}
+          {onMove && (
+            <DropdownMenuItem onClick={() => onMove(src)}>
+              Move
+            </DropdownMenuItem>
+          )}
+          {!isDirectory && onDownload && (
+            <DropdownMenuItem onClick={() => onDownload(src)}>
+              Download
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
