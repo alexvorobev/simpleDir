@@ -4,7 +4,7 @@ import { FolderSelector } from "@/components/folderSelector";
 import Header from "@/components/header";
 import { ItemMenu } from "@/components/itemMenu";
 import { Button } from "@/components/ui/button";
-import { useDirectory, useDownload, useMove } from "@/hooks";
+import { useArchive, useDirectory, useDownload, useMove } from "@/hooks";
 import Image from "next/image";
 import { useCallback, useState, useEffect } from "react";
 
@@ -20,6 +20,7 @@ export default function Home() {
   const { moveItem, error, clearError } = useMove();
   const [objectPath, setObjectPath] = useState<string | null>(null);
   const { downloadFile } = useDownload();
+  const { archiveDirectory } = useArchive();
 
   // folder selector
   const handleFolderSelect = useCallback(
@@ -108,6 +109,7 @@ export default function Home() {
                 src={item.path}
                 onMove={setObjectPath}
                 onDownload={downloadFile}
+                onArchive={archiveDirectory}
               />
             </div>
           ))}

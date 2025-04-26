@@ -15,11 +15,13 @@ export function ItemMenu({
   src,
   onMove,
   onDownload,
+  onArchive,
 }: {
   isDirectory: boolean;
   src: string;
   onMove?: (src: string) => void;
   onDownload?: (src: string) => void;
+  onArchive?: (src: string) => void;
 }) {
   return (
     <DropdownMenu>
@@ -35,6 +37,11 @@ export function ItemMenu({
           {onMove && (
             <DropdownMenuItem onClick={() => onMove(src)}>
               Move
+            </DropdownMenuItem>
+          )}
+          {isDirectory && onArchive && (
+            <DropdownMenuItem onClick={() => onArchive(src)}>
+              Archive
             </DropdownMenuItem>
           )}
           {!isDirectory && onDownload && (
