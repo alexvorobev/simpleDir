@@ -41,7 +41,7 @@ export function ItemMenu({
           )}
           {isDirectory && onArchive && (
             <DropdownMenuItem onClick={() => onArchive(src)}>
-              Archive
+              Download directory
             </DropdownMenuItem>
           )}
           {!isDirectory && onDownload && (
