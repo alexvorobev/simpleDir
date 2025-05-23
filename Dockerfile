@@ -35,8 +35,13 @@ USER nextjs
 # Expose port
 EXPOSE 3000
 
+# Default environment variables that can be overridden in Docker Compose
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
+ENV NODE_ENV production
+ENV BASE_PATH '/public'
+# Set the base path for the application
+ENV NEXT_PUBLIC_BASE_PATH ${BASE_PATH}
 
 # Start the application
 CMD ["node", "server.js"]
