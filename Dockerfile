@@ -2,6 +2,12 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+ARG BASE_PATH
+ENV BASE_PATH=$BASE_PATH
+RUN echo "BASE_PATH is set to: $BASE_PATH"
+# Set the base path for the application
+ENV NEXT_PUBLIC_BASE_PATH=$BASE_PATH
+
 # Install dependencies
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
@@ -36,12 +42,9 @@ USER nextjs
 EXPOSE 3000
 
 # Default environment variables that can be overridden in Docker Compose
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-ENV NODE_ENV production
-ENV BASE_PATH '/public'
-# Set the base path for the application
-ENV NEXT_PUBLIC_BASE_PATH ${BASE_PATH}
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV NODE_ENV=production
 
 # Start the application
 CMD ["node", "server.js"]
