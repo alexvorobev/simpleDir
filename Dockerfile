@@ -2,11 +2,9 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
-ARG BASE_PATH
-ENV BASE_PATH=$BASE_PATH
-RUN echo "BASE_PATH is set to: $BASE_PATH"
-# Set the base path for the application
-ENV NEXT_PUBLIC_BASE_PATH=$BASE_PATH
+# Copy entrypoint script and make it executable
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 # Install dependencies
 COPY package.json yarn.lock ./
@@ -31,6 +29,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
@@ -41,10 +41,6 @@ USER nextjs
 # Expose port
 EXPOSE 3000
 
-# Default environment variables that can be overridden in Docker Compose
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-ENV NODE_ENV=production
-
 # Start the application
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "server.js"]
