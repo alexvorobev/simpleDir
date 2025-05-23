@@ -59,6 +59,3 @@ The container requires at least one volume mount:
 
 This container is intended for local network or trusted environment use. It does not include authentication by default.
 
-## License
-
-See the [LICENSE](LICENSE) file for details.
