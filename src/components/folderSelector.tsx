@@ -63,7 +63,7 @@ export const FolderSelector = ({
         <div className="flex flex-col h-full w-full">
           <div className="border rounded-lg">
             <div className="flex items-center justify-between py-2 px-4 border-b bg-gray-100">
-              <div>
+              <div className="flex items-center">
                 <Button size="icon" variant="link" onClick={clearDirectory}>
                   <Image
                     src="/hardDrive.svg"
